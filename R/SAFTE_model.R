@@ -1,8 +1,32 @@
-SAFTE_model<-function(sleep_data){
+#' SAFTE Model
+#'
+#' This function takes the SAFTE_epoch_tbl output and runs it through the SAFTE model
+#'
+#' The current algorithm is still being refactored for quicker calculations. The current
+#' function can run 1+ minutes for final output. A progress bar should display (progress package)
+#'
+#'
+#' @param dataset dataset output from SAFTE_epoch_tbl
+#'
+#'
+#' @returns This will output a table listing all 24 hour periods that do not have an instance of sleep.
+#'
+#' @import tidyverse
+#' @import lubridate
+#' @import progress
+#'
+#' @export
+
+
+
+
+
+SAFTE_model<-
+  function(dataset){
 
 
   #Constants
-  Epoch_Length<- as.double(sleep_data$Sleep_EBE$Obs_DateTime[2] - sleep_data$Sleep_EBE$Obs_DateTime[1])
+  Epoch_Length<- as.double(dataset$Sleep_EBE$Obs_DateTime[2] - dataset$Sleep_EBE$Obs_DateTime[1])
   Reservoir_Capacity <- 2880
   Normalization_Constant <- 96.7
   alpha_limit <- 3.4
@@ -34,7 +58,7 @@ SAFTE_model<-function(sleep_data){
 
 
   ############### Create Min/ HR Asleep/Awake Values
-  st_table<-sleep_data$Sleep_EBE %>%
+  st_table<-dataset$Sleep_EBE %>%
     group_by(grp = with(rle(Sleep), rep(seq_along(lengths), lengths))) %>%
     mutate(ct = as.numeric(1:n()),
            Min_Asleep = if_else(Sleep > 0, ct, 0),
@@ -137,31 +161,28 @@ SAFTE_model<-function(sleep_data){
       Reservoir_Percent = reservoir_balance/2800
     )
 
-  #st_table<-left_join(st_table, sleep_data$Sleep_EBE %>%
-  # select(Obs_DateTime,Sleep),
-  #   by = "Obs_DateTime")
-  if(!is.null(sleep_data$Work_EBE)){
+    if(!is.null(dataset$Work_EBE)){
 
-    st_table<-left_join(st_table, sleep_data$Work_EBE %>%
+    st_table<-left_join(st_table, dataset$Work_EBE %>%
                           select(Obs_DateTime,Work),
                         by = "Obs_DateTime")
   }
-  if(!is.null(sleep_data$Test_EBE)){
+  if(!is.null(dataset$Test_EBE)){
 
-    st_table<-left_join(st_table, sleep_data$Test_EBE %>%
+    st_table<-left_join(st_table, dataset$Test_EBE %>%
                           select(Obs_DateTime,Test),
                         by = "Obs_DateTime")
   }
-  if(!is.null(sleep_data$Crewing_EBE)){
+  if(!is.null(dataset$Crewing_EBE)){
 
-    st_table<-left_join(st_table, sleep_data$Crewing_EBE %>%
+    st_table<-left_join(st_table, dataset$Crewing_EBE %>%
                           select(Obs_DateTime,Crewing),
                         by = "Obs_DateTime")
   }
 
   SAFTE_Table<-list(Epoch_Table = st_table,
                     Settings = list(SubjectIDs = unique(st_table$ID),
-                                    Dataset = deparse(substitute(sleep_data))))
+                                    Dataset = deparse(substitute(dataset))))
 
 
   return(SAFTE_Table)
