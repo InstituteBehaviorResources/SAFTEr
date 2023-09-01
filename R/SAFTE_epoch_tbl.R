@@ -1,30 +1,43 @@
-##########################  SAFTE EPOCH TABLE ########################################
-####                                                                             ####
-###   This takes the raw, properly formatted data uploaded by the user and        ###
-####    creates tables of 1 minute Epoch data. This is the first essential step  ####
-###     for using the SAFTE model. This is for raw data that has stated start     ###
-####    (bedtime) and end (waketime) data and is not for EPOCH by EPOCH sleep    ####
-###     data. It will return a list of 4 tables, one for identified periods of    ###
-####    sleep, work, testing, and/or crewing if applicable. Only sleep is needed.####
-###                                                                               ###
-#####################################################################################
-
-#### REQUIRED LIBRARIES:
-# library(tidyverse)
-# library(lubridate)
-
-
+#' SAFTE Epoch Table
+#'
+#' This function takes the raw, properly formatted data uploaded by the user and
+#' creates tables of the 1 minute Epoch data. This is the first essential step
+#' for using the SAFTE model.
+#'
+#' Properly formatted data at a minimum has a single column for
+#' sleep identification, a single column for start datetimes for bedtime, and a
+#' single column for end dateimes for waketimes. It can also include work, test,
+#' and crewing identified periods within the same columns.
+#'
+#' This is not for EPOCH by EPOCH data or data already divided into 1 minute
+#' epochs.
+#'
+#' @param dataset Name of the properly formatted dataset uploaded into the R environment by the user (Required)
+#' @param subject_id Identifier of the subject/participant/patient. (Required)
+#' @param obs_start Oberservation start time (i.e. beginning of the study). Formatted as 'YYYY-mm-dd HH:MM' (Required)
+#' @param obs_end Observation end time (i.e. end of the study). Cannot be more than 21 days from the obs_start. Formatted as 'YYYY-mm-dd HH:MM' (Required)
+#' @param sleep_id Marker ID for a sleep period (usually "Sleep" or "sleep"). Defaults to "Sleep"
+#' @param work_id Marker ID for a work period. Defaults to "Work"
+#' @param crewing_id Marker ID for a crewing period within a work period. Defaults to "Crewing"
+#' @param test_id Marker ID for a test period (i.e. PVT taken or medication given). Defaults to "Test"
+#'
+#' @returns A list 4 tables. One for identified periods of sleep, work, testing, and/or crewing if applicable. Period types not identified will return a table as Null.
+#'
+#' @import tidyverse
+#' @import lubridate
+#'
+#' @export
 
 
 SAFTE_epoch_tbl<-
-  function(dataset, #correctly formatted dataset with start and end periods
-           subject_id, #subject_id of the specific subject to model
-           obs_start,  #observation start time (beginning of study)
-           obs_end,   # obsevation end time (end of study) CANNOT be longer than 21 days
-           sleep_id = "Sleep", #marker id for a sleep period (usually noted as "Sleep")
-           work_id = "Work",   #marker id for a work period
-           crewing_id = "Crewing", #marker id for a crewing period within work period
-           test_id = "Test") { #maker for a test period (i.e. PVT taken or medication given)
+  function(dataset,
+           subject_id,
+           obs_start,
+           obs_end,
+           sleep_id = "Sleep",
+           work_id = "Work",
+           crewing_id = "Crewing",
+           test_id = "Test") {
 
   #Turn subject ID into a string--this is so a mix of numerical and alpha-char can be used together
   subject_id<-as.character(subject_id)
