@@ -2,5 +2,12 @@
 
 export(SAFTE_epoch_tbl)
 export(SAFTE_missing_sleep)
+export(SAFTE_model)
+export(SAFTE_plot)
+export(SAFTE_plot_compare_dt)
+export(SAFTE_plot_compare_ln)
+import(grid)
 import(lubridate)
+import(patchwork)
+import(progress)
 import(tidyverse)

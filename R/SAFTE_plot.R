@@ -29,22 +29,17 @@
 #'
 #' @export
 
-
-library(tidyverse)
-library(grid)
-library(patchwork)
-
-
-SAFTE_plot<-function(dataset,
-                         title = "SAFTE Plot",
-                         plot_var = "Effectiveness",
-                         x_label = "Observation Day",
-                         y_label = plot_var,
-                         work = FALSE,
-                         test = FALSE,
-                         crewing = FALSE,
-                         settings = TRUE,
-                         print = TRUE){
+SAFTE_plot<-
+  function(dataset,
+           title = "SAFTE Plot",
+           plot_var = "Effectiveness",
+           x_label = "Observation Day",
+           y_label = plot_var,
+           work = FALSE,
+           test = FALSE,
+           crewing = FALSE,
+           settings = TRUE,
+           print = TRUE){
 
   #Suppress warnings which will always pop when running
   suppressWarnings({
