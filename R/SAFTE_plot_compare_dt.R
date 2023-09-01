@@ -1,34 +1,69 @@
-library(tidyverse)
-library(grid)
-library(patchwork)
+#' SAFTE Plot Compare-Dot Graph
+#'
+#' This function helps plot the fully realized data from the SAFTE model and a dataset
+#' from the same timeframe. It also combines with Sleep, Work, Test, and
+#' Crewing markers for visualizing across a timeline.
+#'
+#' Compare data must sync with the SAFTE model data by observation datetimes.
+#'
+#' Effectiveness and Reservoir_Percent are the most common variables to plot.
+#'
+#' This function utilizes ggplot2 for most graphing functions.
+#'
+#' This is creates a dot graph of the compare data.
+#'
+#'
+#' @param dataset dataset output from SAFTE_model
+#' @param plot_var The variable to be plotted. Defaults to "Effectiveness". Variable should be name of column in " "
+#' @param compare_data dataset with data to be compared
+#' @param datetime_col column name that has the datetime to be compared to the SAFTE model data
+#' @param compare_col column name of the data to be compared to the SAFTE model data
+#' @param title Name/Title to be displayed at the top of the plot. Defaults to "SAFTE Plot"
+#' @param x_label The label for the x-axis (days of observation). Defaults to "Observation Day".
+#' @param y_label_1 The label for the y-axis of the SAFTE model. Defaults to the name of the plot_var
+#' @param y_label_2 The label for the y-axis of the second y-axis of the compare data. Defaults to the name of the compare_col
+#' @param work Include work markers if in dataset. Defaults to FALSE,
+#' @param test Include test markers if in dataset. Defaults to FALSE.
+#' @param crewing Include crewing markers if in dataset. Defaults to FALSE.
+#' @param settings Include a subtitle with subjectID. Defaults to TRUE.
+#' @param print Print the plot after function run
+#'
+#'
+#' @returns This will output an object that contains all of the information for the ggplot to be plotted.
+#' It can also return a print of the plot if print is set to TRUE.
+#'
+#' This plots a dot graph of the compare data against a dot of the SAFTE model.
+#'
+#' @import tidyverse
+#' @import grid
+#' @import patchwork
+#'
+#' @export
 
 
-
-
-
-
-SAFTE_plot_compare_dt<-function(SAFTE_table,
-                                  SAFTE_data_col = "Effectiveness",
-                                  compare_data,
-                                  datetime_col,
-                                  compare_col,
-                                  title,
-                                  x_label = "Observation Day",
-                                  y_label_1 = SAFTE_data_col,
-                                  y_label_2 = compare_col,
-                                  work = FALSE,
-                                  test = FALSE,
-                                  crewing = FALSE,
-                                  settings = TRUE,
-                                  print = TRUE){
+SAFTE_plot_compare_dt<-
+  function(dataset,
+           plot_var = "Effectiveness",
+           compare_data,
+           datetime_col,
+           compare_col,
+           title = "SAFTE Plot",
+           x_label = "Observation Day",
+           y_label_1 = plot_var,
+           y_label_2 = compare_col,
+           work = FALSE,
+           test = FALSE,
+           crewing = FALSE,
+           settings = TRUE,
+           print = TRUE){
 
 
 
   suppressWarnings({
     suppressMessages({
 
-      Compare_Plot <- left_join(SAFTE_table$Epoch_Table %>% select(Obs_DateTime,
-                                                                   SAFTE_data_col = SAFTE_data_col,
+      Compare_Plot <- left_join(dataset$Epoch_Table %>% select(Obs_DateTime,
+                                                                   plot_var = plot_var,
                                                                    Fraction_Days,
                                                                    Sleep,
                                                                    Work,
@@ -78,7 +113,7 @@ SAFTE_plot_compare_dt<-function(SAFTE_table,
 
 
       if(settings == TRUE){
-        sub_t <-paste("Subject/Group ID: ", SAFTE_table$Settings$SubjectIDs)
+        sub_t <-paste("Subject/Group ID: ", dataset$Settings$SubjectIDs)
       }else{
         sub_t<-""
       }
@@ -90,19 +125,19 @@ SAFTE_plot_compare_dt<-function(SAFTE_table,
 
 
       #background for Performance chart
-      if(SAFTE_data_col == "Effectiveness"){
+      if(plot_var == "Effectiveness"){
 
         gmin<-5
 
-        if(min(Compare_Plot$SAFTE_data_col)>= 92){
+        if(min(Compare_Plot$plot_var)>= 92){
           g2<-rasterGrob(scales::alpha(c("lightgreen"), 0.25),
                          width=unit(1,"npc"), height = unit(1,"npc"),
                          interpolate = TRUE)
-        }else if(min(Compare_Plot$SAFTE_data_col)>= 82){
+        }else if(min(Compare_Plot$plot_var)>= 82){
           g2<-rasterGrob(scales::alpha(c("lightgreen","yellow"), 0.25),
                          width=unit(1,"npc"), height = unit(1,"npc"),
                          interpolate = TRUE)
-        }else if(min(Compare_Plot$SAFTE_data_col) >= 72){
+        }else if(min(Compare_Plot$plot_var) >= 72){
           g2<-rasterGrob(scales::alpha(c("lightgreen","yellow", "orange"), 0.25),
                          width=unit(1,"npc"), height = unit(1,"npc"),
                          interpolate = TRUE)
@@ -111,19 +146,19 @@ SAFTE_plot_compare_dt<-function(SAFTE_table,
                          width=unit(1,"npc"), height = unit(1,"npc"),
                          interpolate = TRUE)
         }
-      }else if(SAFTE_data_col == "Reservoir_Percent"){
+      }else if(plot_var == "Reservoir_Percent"){
 
         gmin<- 0.05
 
-        if(min(Compare_Plot$SAFTE_data_col)>= 0.92){
+        if(min(Compare_Plot$plot_var)>= 0.92){
           g2<-rasterGrob(scales::alpha(c("lightgreen"), 0.25),
                          width=unit(1,"npc"), height = unit(1,"npc"),
                          interpolate = TRUE)
-        }else if(min(Compare_Plot$SAFTE_data_col)>= 0.82){
+        }else if(min(Compare_Plot$plot_var)>= 0.82){
           g2<-rasterGrob(scales::alpha(c("lightgreen","yellow"), 0.25),
                          width=unit(1,"npc"), height = unit(1,"npc"),
                          interpolate = TRUE)
-        }else if(min(Compare_Plot$SAFTE_data_col) >= 0.72){
+        }else if(min(Compare_Plot$plot_var) >= 0.72){
           g2<-rasterGrob(scales::alpha(c("lightgreen","yellow", "orange"), 0.25),
                          width=unit(1,"npc"), height = unit(1,"npc"),
                          interpolate = TRUE)
@@ -142,8 +177,8 @@ SAFTE_plot_compare_dt<-function(SAFTE_table,
 
       ##### Create Scaling for overlapping plots
 
-      sdc_min <- min(Compare_Plot$SAFTE_data_col, na.rm = TRUE)
-      sdc_max <- max(Compare_Plot$SAFTE_data_col, na.rm = TRUE)
+      sdc_min <- min(Compare_Plot$plot_var, na.rm = TRUE)
+      sdc_max <- max(Compare_Plot$plot_var, na.rm = TRUE)
       cc_min <- min(Compare_Plot$compare_col, na.rm = TRUE)
       cc_max <- max(Compare_Plot$compare_col,na.rm = TRUE)
 
@@ -153,18 +188,18 @@ SAFTE_plot_compare_dt<-function(SAFTE_table,
       b <- diff(SAFTE_ylim)/diff(compare_ylim)
       a <- SAFTE_ylim[1] - b*compare_ylim[1]
 
-      #sf<-max(Compare_Plot$SAFTE_data_col)/max(Compare_Plot$compare_col)
+      #sf<-max(Compare_Plot$plot_var)/max(Compare_Plot$compare_col)
 
       ### Plots for SAFTE model item and compare data
       p1<-ggplot(data = Compare_Plot) +
         #plot line for SAFTE iteam plot
-        geom_line(aes(x=Fraction_Days, y = Compare_Plot$SAFTE_data_col), size = 1.25, color = "dark blue") +
+        geom_line(aes(x=Fraction_Days, y = Compare_Plot$plot_var), size = 1.25, color = "dark blue") +
 
         #plot line for Compare data plot
         geom_point(aes(x=Fraction_Days, y =  a + Compare_Plot$compare_col*b), color = "red", size = 2) +
 
         #background colors
-        annotation_custom(g2, xmin=-Inf, xmax=Inf,ymin=min(Compare_Plot$SAFTE_data_col)-gmin, ymax=Inf) +
+        annotation_custom(g2, xmin=-Inf, xmax=Inf,ymin=min(Compare_Plot$plot_var)-gmin, ymax=Inf) +
 
         #Set secondary Y-axis scale
         scale_y_continuous(name = y_label_1, sec.axis = sec_axis(~(. - a)/b, name = y_label_2)) +
@@ -247,29 +282,3 @@ SAFTE_plot_compare_dt<-function(SAFTE_table,
 
 }
 
-
-
-trial<-SAFTE_Plot_Compare_Scatter(SAFTE_table = Medstar_SAFTE_Table,
-                               compare_data = Medstar_SAFTE_Table2,
-                               SAFTE_data_col = "Effectiveness",
-                               datetime_col = "Obs_DateTime",
-                               compare_col = "Observation_Var",
-                               title = "Compare",
-                               #x_label = "Day Number",
-                               #y_label_1 = "Effectiveness",
-                               #y_label_2 = "Trial",
-                               work = FALSE,
-                               test = FALSE,
-                               crewing = FALSE,
-                               settings = TRUE,
-                               print = TRUE)
-
-
-
-Medstar_SAFTE_Table2<-Medstar_SAFTE_Table$Epoch_Table %>%
-  mutate(Observation_Var = case_when(Time == .25 ~ row_number(),
-                                     Time == .5 ~ row_number(),
-                                     Time == .75 ~ row_number()))
-
-
-min(Medstar_SAFTE_Table2$Observation_Var, na.rm = TRUE)

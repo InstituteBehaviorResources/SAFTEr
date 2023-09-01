@@ -48,7 +48,7 @@ SAFTE_plot_compare_ln<-
            compare_data,
            datetime_col,
            compare_col,
-           title,
+           title = "SAFTE Plot",
            x_label = "Observation Day",
            y_label_1 = plot_var,
            y_label_2 = compare_col,
