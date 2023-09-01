@@ -1,3 +1,35 @@
+#' SAFTE Plot
+#'
+#' This function helps plot the fully realized data from the SAFTE model and combines
+#' with Sleep, Work, Test, and Crewing markers for visualizing across a timeline.
+#'
+#' Effectiveness and Reservoir_Percent are the most common variables to plot.
+#'
+#' This funciton utilizes ggplot2 for most graphing functions
+#'
+#'
+#' @param dataset dataset output from SAFTE_model
+#' @param title Name/Title to be displayed at the top of the plot. Defaults to "SAFTE Plot"
+#' @param plot_var The variable to be plotted. Defaults to "Effectiveness". Variable should be name of column in " "
+#' @param x_label The label for the x-axis (days of observation). Defaults to "Observation Day".
+#' @param y_label The label for the y-axis. Defaults to the name of the plot_var
+#' @param work Include work markers if in dataset. Defaults to FALSE,
+#' @param test Include test markers if in dataset. Defaults to FALSE.
+#' @param crewing Include crewing markers if in dataset. Defaults to FALSE.
+#' @param settings Include a subtitle with subjectID. Defaults to TRUE.
+#' @param print Print the plot after function run
+#'
+#'
+#' @returns This will output an object that contains all of the information for the ggplot to be plotted.
+#' It can also return a print of the plot if print is set to TRUE.
+#'
+#' @import tidyverse
+#' @import grid
+#' @import patchwork
+#'
+#' @export
+
+
 library(tidyverse)
 library(grid)
 library(patchwork)
@@ -205,13 +237,3 @@ SAFTE_plot<-function(dataset,
   })
 
 }
-
-MedStar_Plot<-SAFTE_Plot(dataset = Medstar_SAFTE_Table,
-                         x_label = "Observation Day",
-                         plot_var = "Effectiveness",
-                         settings = TRUE,
-                         title = "SAFTE-R Plot",
-                         work = TRUE,
-                         test = TRUE,
-                         crewing = TRUE,
-                         print = TRUE)
