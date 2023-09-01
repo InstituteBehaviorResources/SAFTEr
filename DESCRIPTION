@@ -1,13 +1,19 @@
 Package: SAFTEr
 Type: Package
 Title: R package for researchers to apply the SAFTE model to sleep data for comparison to other collected observations.
-Version: 0.1.0
+Version: 0.1.1
 Author: Jake Choynowski
 Maintainer: The package maintainer <jchoynowski@ibrinc.org>
 Description: Formats sleep data from period based sleep with start and stop datetimes and creates a table of 
     1 Minute epochs. The SAFTE model can then be applied to this data and plotted on a single Y axis plot or a dual y-axis
     plot for comparison to outside observations or data. Creates a table that can also be exported for further analyzation.
 License: MIT
+Imports:
+    grid,
+    lubridate,
+    patchwork,
+    progress,
+    tidyverse,
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/InstituteBehaviorResources/SAFTEr
