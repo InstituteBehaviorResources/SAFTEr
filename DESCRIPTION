@@ -8,7 +8,7 @@ Description: Formats sleep data from period based sleep with start and stop date
     1 Minute epochs. The SAFTE model can then be applied to this data and plotted on a single Y axis plot or a dual y-axis
     plot for comparison to outside observations or data. Creates a table that can also be exported for further analyzation.
 License: MIT
-Imports:
+Depends:
     grid,
     lubridate,
     patchwork,
