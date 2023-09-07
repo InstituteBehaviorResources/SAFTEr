@@ -1,10 +1,6 @@
 Package: SAFTEr
 Type: Package
-<<<<<<< HEAD
 Title: Apply the SAFTE Model to Sleep Data
-=======
-Title: R package to apply the SAFTE model to sleep data
->>>>>>> 116e580e59bee6d636b0ea4ecfb3dc37cf6ca1ca
 Version: 0.1.2
 Author: Jake Choynowski
 Maintainer: The package maintainer <jchoynowski@ibrinc.org>
