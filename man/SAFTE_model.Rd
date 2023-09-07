@@ -4,10 +4,12 @@
 \alias{SAFTE_model}
 \title{SAFTE Model}
 \usage{
-SAFTE_model(dataset)
+SAFTE_model(dataset, bedtime = "23:00")
 }
 \arguments{
-\item{dataset}{dataset output from SAFTE_epoch_tbl}
+\item{dataset}{Dataset output from SAFTE_epoch_tbl}
+
+\item{bedtime}{Goal or average bedtime of the subject. Should be formatted in 24hr time as "HH:MM". Default is set to"23:00" or 11PM}
 }
 \value{
 This will output a table listing all 24 hour periods that do not have an instance of sleep.
