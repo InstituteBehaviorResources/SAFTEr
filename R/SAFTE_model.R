@@ -6,7 +6,8 @@
 #' function can run 1+ minutes for final output. A progress bar should display (progress package)
 #'
 #'
-#' @param dataset dataset output from SAFTE_epoch_tbl
+#' @param dataset Dataset output from SAFTE_epoch_tbl
+#' @param bedtime Goal or average bedtime of the subject. Should be formatted in 24hr time as "HH:MM". Default is set to"23:00" or 11PM
 #'
 #'
 #' @returns This will output a table listing all 24 hour periods that do not have an instance of sleep.
@@ -22,7 +23,7 @@
 
 
 SAFTE_model<-
-  function(dataset, bedtime){
+  function(dataset, bedtime = "23:00"){
 
     #Check bedtime format before conversion
     if(is.na(hm(bedtime))) stop("Bedtime Format Incorrect. Bedtime needs to be formated 'HH:MM'")
