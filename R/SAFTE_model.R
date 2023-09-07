@@ -22,22 +22,23 @@
 
 
 SAFTE_model<-
-  function(dataset){
+  function(dataset, bedtime){
+
+    #Check bedtime format before conversion
+    if(is.na(hm(bedtime))) stop("Bedtime Format Incorrect. Bedtime needs to be formated 'HH:MM'")
 
 
-  #Constants
+  # Constants
   Epoch_Length<- as.double(dataset$Sleep_EBE$Obs_DateTime[2] - dataset$Sleep_EBE$Obs_DateTime[1])
   Reservoir_Capacity <- 2880
   Normalization_Constant <- 96.7
   alpha_limit <- 3.4
   relative_amp_swc <- 0.00312
   mesor_sleep_propensity_rhythm <- 0
-  amplitude_sleep_propensity_rhythm <- 0.6
+  amplitude_sleep_propensity_rhythm <- 0.55
   amplitude_sleep_inertia <-0.08
-  amp_12hr_cycle <- 0.3
-  relative_phase_12hr_cycle <- 3.2
-  start_hour<-0
-  acrophase_initial <- 20 ###currently set to 20, need to discuss with Steve if this is adjustable
+  amp_12hr_cycle <- 0.5
+  relative_phase_12hr_cycle <- 3
   kappa_var<- 0.5
   Reservoir_Parameter1 <- .22
   Reservoir_Parameter2 <- .5
@@ -46,18 +47,14 @@ SAFTE_model<-
   amp2<-5
   max_sleep_inertia_perct<-5
 
+  # Calculate Acrophase
 
-  #possible constants?
-  acrophase<- 20
-  pre_average_awake_hr <- 16
-  run_average_3_awake_hr <- 16
-  goal_phase<- 20
-  proper_acrophase<-20
-  average_awake_hr <- 16
+  bedtime<-hm(bedtime)
+  start_hour<-hour(bedtime) + (minute(bedtime)/60)
 
+  acrophase<- as.numeric(if_else(start_hour - 5 <0, start_hour + 19, start_hour - 5))
 
-
-  ############### Create Min/ HR Asleep/Awake Values
+  # Create Min/ HR Asleep/Awake Values
   st_table<-dataset$Sleep_EBE %>%
     group_by(grp = with(rle(Sleep), rep(seq_along(lengths), lengths))) %>%
     mutate(ct = as.numeric(1:n()),
@@ -121,7 +118,7 @@ SAFTE_model<-
                                               st_table$rc_adjust[i-1] + Epoch_Length * (Reservoir_Parameter1 * (1 - (st_table$sleep_debt[i-1]/Reservoir_Parameter2)) +
                                                                                           Reservoir_Parameter3 * (Reservoir_Capacity - st_table$rc_adjust[i-1]))), st_table$rc_adjust[i-1])
 
-      st_table$reservoir_balance[i]<-if_else(st_table$Min_Asleep[i] > Epoch_Length,
+      st_table$reservoir_balance[i]<-if_else(st_table$Sleep[i] == 1,
                                              if_else((st_table$reservoir_balance[i-1] + st_table$func_s[i] - st_table$func_p[i]) <0,0,
                                                      if_else(st_table$reservoir_balance[i-1]  > 2880,
                                                              st_table$reservoir_balance[i-1]  - st_table$func_p[i],
