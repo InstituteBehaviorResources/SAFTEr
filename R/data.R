@@ -1,8 +1,9 @@
-#' Example Dataset on SAFTEr
+#' SAFTEr_xdata
 #'
 #' An example dataset containing four subjects with sleep, work, crewing, and test
 #' events, start and end times for those events, and test results for plotting in
 #' the SAFTEr package. The variables are as follows:
+#'
 #'
 #'
 #' @format A data frame with 358 rows and 5 variables:
@@ -16,7 +17,8 @@
 #' }
 #'
 #' @keywords datasets
-#'
+#' @docType data
+#' @usage data(SAFTEr_xdata)
 #'
 #'
 "SAFTEr_xdata"
