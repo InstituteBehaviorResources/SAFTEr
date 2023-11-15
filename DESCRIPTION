@@ -1,7 +1,7 @@
 Package: SAFTEr
 Type: Package
 Title: Apply the SAFTE Model to Sleep Data
-Version: 0.1.2
+Version: 1.0.0
 Author: Jake Choynowski
 Maintainer: The package maintainer <jchoynowski@ibrinc.org>
 Description: Formats sleep data from period based sleep with start and stop datetimes and creates a table of 

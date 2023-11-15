@@ -14,6 +14,7 @@ SAFTE_plot_compare_ln(
   x_label = "Observation Day",
   y_label_1 = plot_var,
   y_label_2 = compare_col,
+  dot = FALSE,
   work = FALSE,
   test = FALSE,
   crewing = FALSE,
@@ -40,15 +41,17 @@ SAFTE_plot_compare_ln(
 
 \item{y_label_2}{The label for the y-axis of the second y-axis of the compare data. Defaults to the name of the compare_col}
 
-\item{work}{Include work markers if in dataset. Defaults to FALSE,}
+\item{dot}{Add a dot for each data-point along the line. Defaults to FALSE}
 
-\item{test}{Include test markers if in dataset. Defaults to FALSE.}
+\item{work}{Include work markers if in dataset. Defaults to FALSE}
 
-\item{crewing}{Include crewing markers if in dataset. Defaults to FALSE.}
+\item{test}{Include test markers if in dataset. Defaults to FALSE}
 
-\item{settings}{Include a subtitle with subjectID. Defaults to TRUE.}
+\item{crewing}{Include crewing markers if in dataset. Defaults to FALSE}
 
-\item{print}{Print the plot after function run}
+\item{settings}{Include a subtitle with subjectID. Defaults to TRUE}
+
+\item{print}{Print the plot after function run. Defaults to TRUE}
 }
 \value{
 This will output an object that contains all of the information for the ggplot to be plotted.
