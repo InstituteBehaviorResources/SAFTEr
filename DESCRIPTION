@@ -7,7 +7,7 @@ Maintainer: The package maintainer <jchoynowski@ibrinc.org>
 Description: Formats sleep data from period based sleep with start and stop datetimes and creates a table of 
     1 Minute epochs. The SAFTE model can then be applied to this data and plotted on a single Y axis plot or a dual y-axis
     plot for comparison to outside observations or data. Creates a table that can also be exported for further analyzation.
-License: MIT
+License: GPL (>= 3)
 Depends:
     grid,
     lubridate,
